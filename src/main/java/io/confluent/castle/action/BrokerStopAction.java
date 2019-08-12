@@ -31,7 +31,7 @@ public final class BrokerStopAction extends Action {
     public BrokerStopAction(String scope, BrokerRole role) {
         super(new ActionId(TYPE, scope),
             new TargetId[] {
-                new TargetId(JmxDumperStopAction.TYPE, scope)
+                new TargetId(SchemaRegistryStopAction.TYPE, scope)
             },
             new String[] {},
             0);
@@ -40,7 +40,7 @@ public final class BrokerStopAction extends Action {
     @Override
     public void call(CastleCluster cluster, CastleNode node) throws Throwable {
         if (!node.uplink().canLogin()) {
-            node.log().printf("*** Skipping brokerStop, because the node is not running.%n");
+            node.log().printf("*** Skipping %s, because the node is not running.%n", TYPE);
             return;
         }
         CastleUtil.killJavaProcess(cluster, node, BrokerRole.KAFKA_CLASS_NAME, true);

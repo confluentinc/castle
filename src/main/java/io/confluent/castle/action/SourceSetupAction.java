@@ -42,19 +42,26 @@ public final class SourceSetupAction extends Action {
             return;
         }
         cluster.conf().validateKafkaPath();
+        cluster.conf().validateSchemaRegistryPath();
         cluster.conf().validateCastlePath();
         node.uplink().command().args(setupDirectoriesCommand()).mustRun();
         node.uplink().command().
             syncTo(cluster.conf().kafkaPath() + "/", ActionPaths.KAFKA_SRC + "/").
             mustRun();
+        if (!cluster.conf().schemaRegistryPath().isEmpty()) {
+            node.uplink().command().
+                    syncTo(cluster.conf().schemaRegistryPath() + "/", ActionPaths.SCHEMA_REGISTRY_SRC + "/").
+                    mustRun();
+        }
         node.uplink().command().
             syncTo(cluster.conf().castlePath() + "/", ActionPaths.CASTLE_SRC + "/").
             mustRun();
     }
 
     public static String[] setupDirectoriesCommand() {
-        return new String[] {"sudo", "mkdir", "-p", ActionPaths.KAFKA_SRC, ActionPaths.CASTLE_SRC,
-            ActionPaths.LOGS_ROOT, "&&", "sudo", "chown", "-R", "`whoami`",
-            ActionPaths.KAFKA_SRC, ActionPaths.CASTLE_SRC, ActionPaths.LOGS_ROOT};
+        return new String[] {"sudo", "mkdir", "-p",
+            ActionPaths.KAFKA_SRC, ActionPaths.SCHEMA_REGISTRY_SRC, ActionPaths.CASTLE_SRC, ActionPaths.LOGS_ROOT,
+            "&&", "sudo", "chown", "-R", "`whoami`",
+            ActionPaths.KAFKA_SRC, ActionPaths.SCHEMA_REGISTRY_SRC, ActionPaths.CASTLE_SRC, ActionPaths.LOGS_ROOT};
     }
 }

@@ -43,7 +43,7 @@ public class CastleClusterSpec {
                              @JsonProperty("nodes") Map<String, CastleNodeSpec> nodes,
                              @JsonProperty("roles") Map<String, Role> roles) throws Exception {
         this.conf = (conf == null) ?
-            new CastleClusterConf(null, null, 0) : conf;
+            new CastleClusterConf(null, null, null, 0) : conf;
         if (nodes == null) {
             this.nodes = Collections.emptyMap();
         } else {

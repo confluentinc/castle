@@ -17,26 +17,33 @@
 
 package io.confluent.castle.action;
 
-/**
- * Stops the daemons on a node.
- */
-public final class DaemonStopAction extends Action {
-    public final static String TYPE = "daemonStop";
+import io.confluent.castle.cluster.CastleCluster;
+import io.confluent.castle.cluster.CastleNode;
+import io.confluent.castle.common.CastleUtil;
+import io.confluent.castle.role.SchemaRegistryRole;
+import io.confluent.castle.role.ZooKeeperRole;
 
-    public DaemonStopAction(String scope) {
+/**
+ * Stop Schema Registry.
+ */
+public final class SchemaRegistryStopAction extends Action {
+    public final static String TYPE = "schemaRegistryStop";
+
+    public SchemaRegistryStopAction(String scope, SchemaRegistryRole role) {
         super(new ActionId(TYPE, scope),
             new TargetId[] {
-                new TargetId(TaskStopAction.TYPE)
+                new TargetId(JmxDumperStopAction.TYPE)
             },
-            new String[] {
-                BrokerStopAction.TYPE,
-                CollectdStopAction.TYPE,
-                TrogdorDaemonType.AGENT.stopType(),
-                TrogdorDaemonType.COORDINATOR.stopType(),
-                ZooKeeperStopAction.TYPE,
-                SchemaRegistryStopAction.TYPE,
-                JmxDumperStopAction.TYPE
-            },
+            new String[] {},
             0);
+    }
+
+    @Override
+    public void call(CastleCluster cluster, CastleNode node) throws Throwable {
+        if (!node.uplink().canLogin()) {
+            node.log().printf("*** Skipping %s, because the node is not accessible.%n", TYPE);
+            return;
+        }
+        CastleUtil.killJavaProcess(cluster, node, ZooKeeperRole.ZOOKEEPER_CLASS_NAME, false);
     }
 }

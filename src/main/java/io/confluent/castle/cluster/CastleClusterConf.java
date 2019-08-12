@@ -27,14 +27,17 @@ public class CastleClusterConf {
     private final static int DEFAULT_GLOBAL_TIMEOUT = 3600;
 
     private final String kafkaPath;
+    private final String schemaRegistryPath;
     private final String castlePath;
     private final int globalTimeout;
 
     @JsonCreator
     public CastleClusterConf(@JsonProperty("kafkaPath") String kafkaPath,
+                             @JsonProperty("schemaRegistryPath") String schemaRegistryPath,
                              @JsonProperty("castlePath") String castlePath,
                              @JsonProperty("globalTimeout") int globalTimeout) {
         this.kafkaPath = (kafkaPath == null) ? "" : kafkaPath;
+        this.schemaRegistryPath = (schemaRegistryPath == null) ? "" : schemaRegistryPath;
         this.castlePath = (castlePath == null) ? "" : castlePath;
         this.globalTimeout = (globalTimeout <= 0) ? DEFAULT_GLOBAL_TIMEOUT : globalTimeout;
     }
@@ -52,17 +55,31 @@ public class CastleClusterConf {
         }
     }
 
-    public void validateCastlePath() {
-        if (castlePath.isEmpty() ||
-                !(new File(castlePath).isDirectory())) {
-            throw new RuntimeException("The current value of castlePath (" +
-                castlePath + ") does not point to a valid directory.");
+    @JsonProperty
+    public String schemaRegistryPath() {
+        return schemaRegistryPath;
+    }
+
+    public void validateSchemaRegistryPath() {
+        // Schema registry path is optional
+        if (!schemaRegistryPath.isEmpty() &&
+                !(new File(schemaRegistryPath).isDirectory())) {
+            throw new RuntimeException("The current value of schemaRegistryPath (" +
+                    schemaRegistryPath + ") does not point to a valid directory.");
         }
     }
 
     @JsonProperty
     public String castlePath() {
         return castlePath;
+    }
+
+    public void validateCastlePath() {
+        if (castlePath.isEmpty() ||
+                !(new File(castlePath).isDirectory())) {
+            throw new RuntimeException("The current value of castlePath (" +
+                    castlePath + ") does not point to a valid directory.");
+        }
     }
 
     @JsonProperty

@@ -30,6 +30,7 @@ public final class DaemonStartAction extends Action {
                 BrokerStartAction.TYPE,
                 CollectdStartAction.TYPE,
                 ZooKeeperStartAction.TYPE,
+                SchemaRegistryStartAction.TYPE,
                 TrogdorDaemonType.COORDINATOR.startType(),
                 TrogdorDaemonType.AGENT.startType(),
                 JmxDumperStartAction.TYPE

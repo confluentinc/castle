@@ -99,6 +99,15 @@ public final class DockerCloud implements AutoCloseable {
             run.add(String.format("%s:%s", cluster.conf().kafkaPath(),
                 ActionPaths.KAFKA_SRC));
         }
+        if (!cluster.conf().schemaRegistryPath().isEmpty()) {
+            if (!Files.isDirectory(Paths.get(cluster.conf().schemaRegistryPath()))) {
+                throw new RuntimeException("Unable to access Schema Registry path " +
+                    cluster.conf().schemaRegistryPath());
+            }
+            run.add("-v");
+            run.add(String.format("%s:%s", cluster.conf().schemaRegistryPath(),
+                ActionPaths.SCHEMA_REGISTRY_SRC));
+        }
         if (!cluster.env().clusterOutputPath().isEmpty()) {
             Path logDir = Paths.get(cluster.env().workingDirectory(),
                 "logs",

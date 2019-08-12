@@ -30,6 +30,7 @@ public final class DaemonStatusAction extends Action {
                 BrokerStatusAction.TYPE,
                 CollectdStatusAction.TYPE,
                 ZooKeeperStatusAction.TYPE,
+                SchemaRegistryStatusAction.TYPE,
                 TrogdorDaemonType.COORDINATOR.statusType(),
                 TrogdorDaemonType.AGENT.statusType(),
                 JmxDumperStatusAction.TYPE
