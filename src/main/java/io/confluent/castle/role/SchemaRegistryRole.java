@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SchemaRegistryRole implements Role {
@@ -47,10 +48,13 @@ public class SchemaRegistryRole implements Role {
 
     private final String jvmOptions;
 
+    private final List<Schema> schemas;
+
     @JsonCreator
     public SchemaRegistryRole(@JsonProperty("initialDelayMs") int initialDelayMs,
                               @JsonProperty("conf") Map<String, String> conf,
-                              @JsonProperty("jvmOptions") String jvmOptions) {
+                              @JsonProperty("jvmOptions") String jvmOptions,
+                              @JsonProperty("schemas") List<Schema> schemas) {
         this.initialDelayMs = initialDelayMs;
         this.conf = conf == null ? Collections.emptyMap() :
             Collections.unmodifiableMap(new HashMap<>(conf));
@@ -59,6 +63,8 @@ public class SchemaRegistryRole implements Role {
         } else {
             this.jvmOptions = jvmOptions;
         }
+        this.schemas = schemas == null ? Collections.emptyList() :
+            Collections.unmodifiableList(new ArrayList<>(schemas));
     }
 
     @JsonProperty
@@ -74,6 +80,11 @@ public class SchemaRegistryRole implements Role {
     @JsonProperty
     public String jvmOptions() {
         return jvmOptions;
+    }
+
+    @JsonProperty
+    public List<Schema> schemas() {
+        return schemas;
     }
 
     @Override

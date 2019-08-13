@@ -133,7 +133,8 @@
           "activeTopics": {
             "active[1-%{CASTLE_ACTIVE_TOPICS}]": {
               "numPartitions": 3,
-              "replicationFactor": 3
+              "replicationFactor": 3,
+              "confluent.value.schema.validation": "true"
             }
           },
           "inactiveTopics": {
@@ -155,13 +156,7 @@
       "type": ".UbuntuNodeRole"
     },
     "schemaRegistry": {
-      "type": ".SchemaRegistryRole",
-      "schemas": [
-        {
-          "subject": "subject1",
-          "schema": "{ \"type\": \"string\" }"
-        }
-      ]
+      "type": ".SchemaRegistryRole"
     },
     "zooKeeper": {
       "type": ".ZooKeeperRole"

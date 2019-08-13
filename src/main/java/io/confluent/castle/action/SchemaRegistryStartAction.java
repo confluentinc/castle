@@ -21,6 +21,7 @@ import io.confluent.castle.cluster.CastleCluster;
 import io.confluent.castle.cluster.CastleNode;
 import io.confluent.castle.common.CastleUtil;
 import io.confluent.castle.common.DynamicVariableExpander;
+import io.confluent.castle.role.Schema;
 import io.confluent.castle.role.SchemaRegistryRole;
 
 import java.io.File;
@@ -28,7 +29,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -65,6 +68,7 @@ public class SchemaRegistryStartAction extends Action  {
                 ActionPaths.SCHEMA_REGISTRY_PROPERTIES).mustRun();
             node.uplink().command().syncTo(log4jFile.getAbsolutePath(),
                 ActionPaths.SCHEMA_REGISTRY_LOG4J).mustRun();
+            writeSchemas(cluster, node);
             node.uplink().command().args(createRunDaemonCommandLine()).mustRun();
         } finally {
             CastleUtil.deleteFileOrLog(node.log(), configFile);
@@ -77,6 +81,14 @@ public class SchemaRegistryStartAction extends Action  {
                     CastleUtil.checkJavaProcessStatusArgs(SchemaRegistryRole.SCHEMA_REGISTRY_CLASS_NAME)).run();
             }
         });
+        CastleUtil.waitFor(5, 30000, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return 0 == node.uplink().command().args(
+                    checkRestServiceArgs()).run();
+            }
+        });
+        node.uplink().command().args(createSchemas()).mustRun();
     }
 
     public static String[] createSetupPathsCommandLine() {
@@ -170,5 +182,68 @@ public class SchemaRegistryStartAction extends Action  {
                 CastleUtil.deleteFileOrLog(node.log(), file);
             }
         }
+    }
+
+    private void writeSchemas(final CastleCluster cluster, final CastleNode node) throws Throwable {
+        for (int i = 0; i < role.schemas().size(); i++) {
+            File schemaFile = writeSchema(cluster, node, i);
+            node.uplink().command().syncTo(schemaFile.getAbsolutePath(),
+                String.format(ActionPaths.SCHEMA_REGISTRY_SCHEMA, i)).mustRun();
+        }
+    }
+
+    private File writeSchema(CastleCluster cluster, CastleNode node, int index) throws IOException {
+        File file = null;
+        FileOutputStream fos = null;
+        OutputStreamWriter osw = null;
+        boolean success = false;
+        try {
+            Schema schema = role.schemas().get(index);
+            file = new File(cluster.env().workingDirectory(),
+                    String.format("schema-%d.asc", index));
+            fos = new FileOutputStream(file, false);
+            osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+            osw.write("{ \"schema\": \"");
+            osw.write(schema.schema().replace("\"", "\\\""));
+            osw.write("\" }");
+            success = true;
+            return file;
+        } finally {
+            CastleUtil.closeQuietly(cluster.clusterLog(),
+                osw, "temporary Schema Registry file OutputStreamWriter");
+            CastleUtil.closeQuietly(cluster.clusterLog(),
+                fos, "temporary Schema Registry file FileOutputStream");
+            if (!success) {
+                CastleUtil.deleteFileOrLog(node.log(), file);
+            }
+        }
+    }
+
+    private static String[] checkRestServiceArgs() {
+        return new String[] {"-n", "--", "curl", "http://localhost:8081/config"};
+    }
+
+    private String[] createSchemas() {
+        String separator = "";
+        List<String> args = new ArrayList<>();
+        args.add("-n");
+        args.add("--");
+        for (int i = 0; i < role.schemas().size(); i++) {
+            Schema schema = role.schemas().get(i);
+            if (!separator.isEmpty()) {
+                args.add(separator);
+            } else {
+                separator = "&&";
+            }
+            args.add("curl");
+            args.add("-X");
+            args.add("POST");
+            args.add("-H");
+            args.add("Content-Type:application/vnd.schemaregistry.v1+json");
+            args.add("--data");
+            args.add("@" + String.format(ActionPaths.SCHEMA_REGISTRY_SCHEMA, i));
+            args.add("http://localhost:8081/subjects/" + schema.subject() + "/versions");
+        }
+        return args.toArray(new String[0]);
     }
 };

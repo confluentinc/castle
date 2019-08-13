@@ -50,6 +50,7 @@ public final class ActionPaths {
     public static final String SCHEMA_REGISTRY_START_SCRIPT = SCHEMA_REGISTRY_SRC + "/bin/schema-registry-start";
     public static final String SCHEMA_REGISTRY_CONF = SCHEMA_REGISTRY_ROOT + "/conf";
     public static final String SCHEMA_REGISTRY_PROPERTIES = SCHEMA_REGISTRY_CONF + "/schema-registry.properties";
+    public static final String SCHEMA_REGISTRY_SCHEMA = SCHEMA_REGISTRY_CONF + "/schema-%d.avsc";
     public static final String SCHEMA_REGISTRY_LOG4J = SCHEMA_REGISTRY_CONF + "/log4j.properties";
     public static final String SCHEMA_REGISTRY_LOGS = SCHEMA_REGISTRY_ROOT + "/schema-registry";
 
