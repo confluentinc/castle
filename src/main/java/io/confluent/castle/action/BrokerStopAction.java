@@ -31,6 +31,7 @@ public final class BrokerStopAction extends Action {
     public BrokerStopAction(String scope, BrokerRole role) {
         super(new ActionId(TYPE, scope),
             new TargetId[] {
+                new TargetId(JmxDumperStopAction.TYPE, scope),
                 new TargetId(SchemaRegistryStopAction.TYPE, scope)
             },
             new String[] {},
