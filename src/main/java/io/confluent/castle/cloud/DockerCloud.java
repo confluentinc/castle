@@ -82,28 +82,19 @@ public final class DockerCloud implements AutoCloseable {
             "--network=" + NETWORK,
             "-p", "::22"}));
         if (!cluster.conf().castlePath().isEmpty()) {
-            if (!Files.isDirectory(Paths.get(cluster.conf().castlePath()))) {
-                throw new RuntimeException("Unable to access Castle path " +
-                    cluster.conf().castlePath());
-            }
+            cluster.conf().validateCastlePath();
             run.add("-v");
             run.add(String.format("%s:%s", cluster.conf().castlePath(),
                 ActionPaths.CASTLE_SRC));
         }
         if (!cluster.conf().kafkaPath().isEmpty()) {
-            if (!Files.isDirectory(Paths.get(cluster.conf().kafkaPath()))) {
-                throw new RuntimeException("Unable to access Kafka path " +
-                    cluster.conf().kafkaPath());
-            }
+            cluster.conf().validateKafkaPath();
             run.add("-v");
             run.add(String.format("%s:%s", cluster.conf().kafkaPath(),
                 ActionPaths.KAFKA_SRC));
         }
         if (!cluster.conf().schemaRegistryPath().isEmpty()) {
-            if (!Files.isDirectory(Paths.get(cluster.conf().schemaRegistryPath()))) {
-                throw new RuntimeException("Unable to access Schema Registry path " +
-                    cluster.conf().schemaRegistryPath());
-            }
+            cluster.conf().validateSchemaRegistryPath();
             run.add("-v");
             run.add(String.format("%s:%s", cluster.conf().schemaRegistryPath(),
                 ActionPaths.SCHEMA_REGISTRY_SRC));

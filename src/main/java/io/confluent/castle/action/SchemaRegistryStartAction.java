@@ -166,9 +166,10 @@ public class SchemaRegistryStartAction extends Action  {
             osw.write(String.format("log4j.appender.kafkaAppender.layout.ConversionPattern=%s%n%n",
                 "[%d] %p %m (%c)%n"));
             osw.write(String.format("log4j.logger.kafka=ERROR%n"));
+            osw.write(String.format("log4j.logger.kafka.log=INFO%n"));
             osw.write(String.format("log4j.logger.org.apache.kafka=ERROR%n"));
             osw.write(String.format("log4j.logger.org.apache.zookeeper=ERROR%n"));
-            osw.write(String.format("log4j.logger.org.I0Itec.zkclient.ZkClient=INFO%n"));
+            osw.write(String.format("log4j.logger.org.I0Itec.zkclient.ZkClient=ERROR%n"));
             osw.write(String.format("log4j.additivity.kafka.server=false%n"));
             osw.write(String.format("log4j.additivity.kafka.consumer.ZookeeperConsumerConnector=false%n"));
             success = true;

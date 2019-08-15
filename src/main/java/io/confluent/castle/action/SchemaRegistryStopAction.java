@@ -44,6 +44,6 @@ public final class SchemaRegistryStopAction extends Action {
             node.log().printf("*** Skipping %s, because the node is not accessible.%n", TYPE);
             return;
         }
-        CastleUtil.killJavaProcess(cluster, node, ZooKeeperRole.ZOOKEEPER_CLASS_NAME, false);
+        CastleUtil.killJavaProcess(cluster, node, SchemaRegistryRole.SCHEMA_REGISTRY_CLASS_NAME, false);
     }
 }
