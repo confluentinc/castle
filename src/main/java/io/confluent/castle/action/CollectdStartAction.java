@@ -94,6 +94,12 @@ public final class CollectdStartAction extends Action {
             osw.write(String.format("   ValuesPercentage true%n"));
             osw.write(String.format("</Plugin>%n"));
             osw.write(String.format("%n"));
+            osw.write(String.format("LoadPlugin memory%n"));
+            osw.write(String.format("<Plugin \"memory\">%n"));
+            osw.write(String.format("   ValuesAbsolute false%n"));
+            osw.write(String.format("   ValuesPercentage true%n"));
+            osw.write(String.format("</Plugin>%n"));
+            osw.write(String.format("%n"));
             osw.write(String.format("LoadPlugin interface%n"));
             osw.write(String.format("<Plugin \"interface\">%n"));
             osw.write(String.format("  Interface \"lo\"%n"));
