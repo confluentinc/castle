@@ -36,7 +36,7 @@
         <argparse4j.version>0.8.1</argparse4j.version>
         <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
         <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
-        <jackson.version>2.9.10.1</jackson.version>
+        <jackson.version>2.9.10.3</jackson.version>
         <junit.version>4.12</junit.version>
         <maven-compiler-plugin-version>3.7.0</maven-compiler-plugin-version>
         <maven-dependency-plugin.version>3.0.2</maven-dependency-plugin.version>
