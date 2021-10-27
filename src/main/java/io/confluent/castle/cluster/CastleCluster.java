@@ -25,7 +25,6 @@ import io.confluent.castle.common.CastleLog;
 import io.confluent.castle.common.CastleUtil;
 import io.confluent.castle.common.DynamicVariableProviders;
 import io.confluent.castle.common.JsonMerger;
-import io.confluent.castle.role.BrokerRole;
 import io.confluent.castle.role.Role;
 import io.confluent.castle.role.UplinkRole;
 import io.confluent.castle.role.ZooKeeperRole;
@@ -158,19 +157,6 @@ public final class CastleCluster implements AutoCloseable {
             bld.append(prefix);
             prefix = ",";
             bld.append(nodes().get(nodeName).uplink().internalDns()).append(":2181");
-        }
-        return bld.toString();
-    }
-
-    public String getBrokerConnectString() {
-        StringBuilder bld = new StringBuilder();
-        String prefix = "";
-        for (String nodeName : nodesWithRole(BrokerRole.class).values()) {
-            bld.append(prefix);
-            prefix = ",";
-            bld.append("PLAINTEXT://");
-            bld.append(nodes.get(nodeName).uplink().internalDns());
-            bld.append(":9092");
         }
         return bld.toString();
     }

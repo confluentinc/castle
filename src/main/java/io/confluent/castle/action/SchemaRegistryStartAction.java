@@ -114,7 +114,6 @@ public class SchemaRegistryStartAction extends Action  {
         defaultConf.put("listeners", "http://0.0.0.0:8081");
         defaultConf.put("kafkastore.topic", "_schemas");
         defaultConf.put("debug", "true");
-        defaultConf.put("kafkastore.topic.replication.factor", "1");
         return defaultConf;
     }
 

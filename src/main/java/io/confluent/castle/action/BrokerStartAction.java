@@ -115,7 +115,6 @@ public final class BrokerStartAction extends Action {
         defaultConf.put("num.recovery.threads.per.data.dir", "1");
         defaultConf.put("log.retention.bytes", "104857600");
         defaultConf.put("zookeeper.connection.timeout.ms", "6000");
-        defaultConf.put("offsets.topic.replication.factor", "1");
         return defaultConf;
     }
 
