@@ -114,6 +114,7 @@ public class SchemaRegistryStartAction extends Action  {
         defaultConf.put("listeners", "http://0.0.0.0:8081");
         defaultConf.put("kafkastore.topic", "_schemas");
         defaultConf.put("debug", "true");
+        defaultConf.put("kafkastore.topic.replication.factor", "1");
         return defaultConf;
     }
 
@@ -131,7 +132,8 @@ public class SchemaRegistryStartAction extends Action  {
                 String.format("schema-registry-%d.properties", node.nodeIndex()));
             fos = new FileOutputStream(file, false);
             osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-            osw.write(String.format("kafkastore.bootstrap.servers=%s%n", cluster.getBrokerConnectString()));
+            String bootstrapServers = cluster.dynamicVariableProviders().get("bootstrapServers").calculate(cluster, node);
+            osw.write(String.format("kafkastore.bootstrap.servers=%s%n", bootstrapServers));
             for (Map.Entry<String, String> entry : effectiveConf.entrySet()) {
                 osw.write(String.format("%s=%s%n", entry.getKey(), entry.getValue()));
             }
