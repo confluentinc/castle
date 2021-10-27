@@ -131,7 +131,7 @@ public class SchemaRegistryStartAction extends Action  {
                 String.format("schema-registry-%d.properties", node.nodeIndex()));
             fos = new FileOutputStream(file, false);
             osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-            osw.write(String.format("kafkastore.connection.url=%s%n", cluster.getZooKeeperConnectString()));
+            osw.write(String.format("kafkastore.bootstrap.servers=%s%n", cluster.getBrokerConnectString()));
             for (Map.Entry<String, String> entry : effectiveConf.entrySet()) {
                 osw.write(String.format("%s=%s%n", entry.getKey(), entry.getValue()));
             }
