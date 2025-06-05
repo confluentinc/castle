@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class BrokerRole implements Role {
     // Handle both kafka.Kafka and SupportedKafka
-    public static final String KAFKA_CLASS_NAME = "Kafka";
+    public static final String KAFKA_CLASS_NAME = "kafka.Kafka";
 
     private static final String DEFAULT_JVM_PERFORMANCE_OPTS = "-Xmx3g -Xms3g";
 
