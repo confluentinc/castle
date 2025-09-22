@@ -38,7 +38,7 @@
         <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
         <jackson.version>2.9.10.7</jackson.version>
         <junit.version>4.13.2</junit.version>
-        <maven-compiler-plugin-version>3.14.0</maven-compiler-plugin-version>
+        <maven-compiler-plugin-version>3.14.1</maven-compiler-plugin-version>
         <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
